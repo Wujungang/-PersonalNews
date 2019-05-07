@@ -1,4 +1,6 @@
 import redis
+import logging
+
 
 class Config(object):
 
@@ -7,7 +9,7 @@ class Config(object):
     #开启调试模式
     DEBUG = True
     # 数据库的配置信息
-    SQLALCHEMY_DATABASE_URI = "mysql://root:123456@222.29.81.144:3306/information"
+    SQLALCHEMY_DATABASE_URI = "mysql+pymysql://root:123456@222.29.81.144:3306/information"
     #禁止动态追踪
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     # redis配置
@@ -24,11 +26,12 @@ class Config(object):
 class DevelopementConfig(Config):
     """开发模式下的配置"""
     DEBUG = True
+    LOG_LEVEL = logging.DEBUG
 
 
 class ProductionConfig(Config):
     """生产模式下的配置"""
-    pass
+    LOG_LEVEL = logging.ERROR
 
 class UnitTsetConfig(Config):
     """生产模式下的配置"""

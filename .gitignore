@@ -2,8 +2,9 @@
 __pycache__/
 *.py[cod]
 *$py.class
-
+logs/log*
 # C extensions
+migrations
 *.so
 .idea/
 # Distribution / packaging
