@@ -1,6 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
 import redis
-from flask_wtf.csrf import CSRFProtect
+from flask_wtf.csrf import CSRFProtect, generate_csrf
 from flask_session import Session
 from flask import Flask
 from config import config
@@ -34,11 +34,23 @@ def create_app(config_name):
     # global redis_store
     # redis_store = redis.StrictRedis(host=config[config_name].REDIS_HOST, port=config[config_name].REDIS_PORT,decode_responses=True)
     # 开启csrf保护
-    # CSRFProtect(app)
+    CSRFProtect(app)
     # 将Sessiom扩展与flask对象关联
     Session(app)
 
     #注册蓝图
     from info.modules.index import index_blue
     app.register_blueprint(index_blue)
+    from info.modules.passport import passport_blue
+    app.register_blueprint(passport_blue)
+
+
+    @app.after_request
+    def after_request(response):
+        csrf_token = generate_csrf()
+        response.set_cookie("csrf_token",csrf_token)
+        return response
+
     return app
+
+
