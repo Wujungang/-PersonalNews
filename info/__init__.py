@@ -2,6 +2,7 @@ from flask_sqlalchemy import SQLAlchemy
 import redis
 from flask_wtf.csrf import CSRFProtect, generate_csrf
 from flask_session import Session
+from info.utils.common import wjg
 from flask import Flask
 from config import config
 import logging
@@ -50,6 +51,9 @@ def create_app(config_name):
         csrf_token = generate_csrf()
         response.set_cookie("csrf_token",csrf_token)
         return response
+
+    #注册自定义过滤器
+    app.add_template_filter(wjg,'wjg')
 
     return app
 

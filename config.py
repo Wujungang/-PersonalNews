@@ -9,7 +9,7 @@ class Config(object):
     #开启调试模式
     DEBUG = True
     # 数据库的配置信息
-    SQLALCHEMY_DATABASE_URI = "mysql+pymysql://root:123456@127.0.0.1:3306/information"
+    SQLALCHEMY_DATABASE_URI = "mysql+pymysql://root:123456@222.29.81.144:3306/information"
     #禁止动态追踪
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     # redis配置
@@ -20,6 +20,9 @@ class Config(object):
     SESSION_USE_SIGNER = True  # 让 cookie 中的 session_id 被加密签名处理
     SESSION_REDIS = redis.StrictRedis(host=REDIS_HOST, port=REDIS_PORT)  # 使用 redis 的实例
     PERMANENT_SESSION_LIFETIME = 86400  # session 的有效期，单位是秒
+
+
+
 
 
 
