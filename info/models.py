@@ -62,7 +62,8 @@ class User(BaseModel, db.Model):
         resp_dict = {
             "id": self.id,
             "nick_name": self.nick_name,
-            "avatar_url": constants.QINIU_DOMIN_PREFIX + self.avatar_url if self.avatar_url else "",
+            # "avatar_url": constants.QINIU_DOMIN_PREFIX + self.avatar_url if self.avatar_url else "",
+            "avatar_url":self.avatar_url,
             "mobile": self.mobile,
             "gender": self.gender if self.gender else "MAN",
             "signature": self.signature if self.signature else "",
