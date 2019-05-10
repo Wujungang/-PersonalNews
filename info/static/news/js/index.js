@@ -43,9 +43,18 @@ $(function () {
 
         if ((canScrollHeight - nowScroll) < 100) {
             // TODO 判断页数，去更新新闻数据
+            if (!data_querying){
+                data_querying = true;
+                if(cur_page < total_page){
+                    cur_page +=1;
+                    updateNewsData();
+                }else {
+                    data_querying = false;
+                }
+            }
         }
     })
-})
+});
 
 function updateNewsData() {
     // TODO 更新新闻数据
@@ -80,9 +89,13 @@ function updateNewsData() {
     //     }
     // })
     $.get('/newslist',params,function (response) {
+          data_querying = false;
           if (response.errno=200) {
+                total_page = response.data.total_pages;
                 // 先清空原有数据
-                $(".list_con").html('');
+              if (cur_page == 1){
+                  $(".list_con").html('');
+              }
                 // 显示数据
                 for (var i = 0; i < response.data.news.length; i++) {
                     var news = response.data.news[i];
@@ -93,8 +106,8 @@ function updateNewsData() {
                     content += '<div class="author_info fl">';
                     content += '<div class="source fl">来源：' + news.source + '</div>';
                     content += '<div class="time fl">' + news.create_time + '</div>';
-                    content += '</div>'
-                    content += '</li>'
+                    content += '</div>';
+                    content += '</li>';
                     $(".list_con").append(content)
                 }
             }

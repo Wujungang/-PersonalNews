@@ -22,10 +22,6 @@ class Config(object):
     PERMANENT_SESSION_LIFETIME = 86400  # session 的有效期，单位是秒
 
 
-
-
-
-
 class DevelopementConfig(Config):
     """开发模式下的配置"""
     DEBUG = True
