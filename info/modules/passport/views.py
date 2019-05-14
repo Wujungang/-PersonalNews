@@ -4,13 +4,14 @@ from . import passport_blue
 from info.models import User
 from info import redis_store,db
 from info.utils.captcha.captcha import captcha
-from flask import request, current_app, jsonify,session,make_response,abort
+from flask import request, current_app, jsonify, session, make_response, abort, g
 from datetime import datetime
-
+from info.utils.common import user_login_data
 
 
 
 @passport_blue.route('/login',methods=['POST'])
+@user_login_data
 def login():
     data_dict = request.json
     mobile = data_dict.get('mobile')
@@ -24,8 +25,9 @@ def login():
     except Exception as e:
         current_app.logger.error(e)
         return jsonify(errno=500,errmsg='用户名或密码错误')
-    if not user:
-        return jsonify(errno=500,errmsg='用户名或密码错误')
+    # user = g.user
+    # if not user:
+    #     return jsonify(errno=500,errmsg='用户名或密码错误')
     #校验密码
     if not user.check_password(password):
         return jsonify(errno=500,errmsg='用户名或密码错误')

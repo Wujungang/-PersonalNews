@@ -310,6 +310,7 @@ function logout() {
         success:function (response) {
             if (response.errno == 200){
                 alert(response.errmsg)
+                location.reload()
             }else(
                 alert('退出失败')
             )

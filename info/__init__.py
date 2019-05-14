@@ -2,7 +2,7 @@ from flask_sqlalchemy import SQLAlchemy
 import redis
 from flask_wtf.csrf import CSRFProtect, generate_csrf
 from flask_session import Session
-from info.utils.common import wjg
+
 from flask import Flask
 from config import config
 import logging
@@ -55,6 +55,7 @@ def create_app(config_name):
         return response
 
     #注册自定义过滤器
+    from info.utils.common import wjg
     app.add_template_filter(wjg,'wjg')
 
     return app

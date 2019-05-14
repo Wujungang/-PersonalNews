@@ -1,9 +1,9 @@
 from . import index_blue
 from info import redis_store
 from info.models import User,News,Category
-from flask import render_template, session, jsonify
+from flask import render_template, session, jsonify, g
 from flask import current_app,request
-
+from info.utils.common import user_login_data
 
 @index_blue.route('/newslist')
 def newslist():
@@ -47,6 +47,7 @@ def logout():
 
 
 @index_blue.route('/')
+@user_login_data
 def index():
 
     #点击排行展示
@@ -60,10 +61,8 @@ def index():
         new = new.to_basic_dict()
         news_click_list.append(new)
 
-    user_id = session.get('user_id')
-    user = User.query.filter(User.id==user_id).first()
-    user = user.to_dict()if user else None
 
+    user = g.user
     #查询商品分类
     categories_list = []
     categories = Category.query.all()
@@ -72,12 +71,10 @@ def index():
         categories_list.append(category)
 
     data = {
-        'user_info':user,
+        'user_info':user if user else None,
         'news':news_click_list,
         'categories':categories
     }
-
-
 
     return render_template('news/index.html',data=data)
 
