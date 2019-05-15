@@ -19,7 +19,7 @@
                     {% else %}
                     ../../static/news/images/person01.png
                     {% endif %}" class="lgin_pic">
-                    <a href="#">{{ data.user.nick_name }}</a>
+                    <a href="{{ url_for('user.get_user_info') }}">{{ data.user.nick_name }}</a>
                     <a href="#" onclick="logout()">退出</a>
             {% else %}
                     <a href="{{ url_for('index.index') }}" class="logo fl"><img src="../../static/news/images/logo.png" alt="logo"></a>

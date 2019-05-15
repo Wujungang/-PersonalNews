@@ -168,7 +168,7 @@ def news_detail(news_id):
             comment_list.append(comment)
 
     data = {
-        'user':user,
+        'user':user.to_dict(),
         'news':news.to_dict(),
         'click_news':click_news,
         'is_collected':is_collected,

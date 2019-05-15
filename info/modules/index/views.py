@@ -71,7 +71,7 @@ def index():
         categories_list.append(category)
 
     data = {
-        'user_info':user if user else None,
+        'user_info':user.to_dict() if user else None,
         'news':news_click_list,
         'categories':categories
     }
