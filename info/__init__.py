@@ -3,7 +3,7 @@ import redis
 from flask_wtf.csrf import CSRFProtect, generate_csrf
 from flask_session import Session
 
-from flask import Flask
+from flask import Flask, render_template
 from config import config
 import logging
 from logging.handlers import RotatingFileHandler
@@ -48,12 +48,18 @@ def create_app(config_name):
     app.register_blueprint(news_blue)
     from info.modules.users import user_blue
     app.register_blueprint(user_blue)
+    from info.modules.admin import admin_blue
+    app.register_blueprint(admin_blue)
 
+    @app.errorhandler(404)
+    def errorhandler(e):
+        return render_template('news/404.html')
 
     @app.after_request
     def after_request(response):
         csrf_token = generate_csrf()
         response.set_cookie("csrf_token",csrf_token)
+        response.set_cookie('wjg','123')
         return response
 
     #注册自定义过滤器

@@ -117,7 +117,8 @@ class News(BaseModel, db.Model):
             "title": self.title,
             "create_time": self.create_time.strftime("%Y-%m-%d %H:%M:%S"),
             "status": self.status,
-            "reason": self.reason if self.reason else ""
+            "reason": self.reason if self.reason else "",
+            "category": self.category.to_dict(),
         }
         return resp_dict
 

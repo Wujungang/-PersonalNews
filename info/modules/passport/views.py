@@ -4,11 +4,26 @@ from . import passport_blue
 from info.models import User
 from info import redis_store,db
 from info.utils.captcha.captcha import captcha
-from flask import request, current_app, jsonify, session, make_response, abort, g
+from flask import request, current_app, jsonify, session, make_response, abort, g, redirect, url_for
 from datetime import datetime
 from info.utils.common import user_login_data
 
 
+
+
+@passport_blue.route("/logout")
+def logout():
+    """
+    清除session中的对应登录之后保存的信息
+    :return:
+    """
+    session.pop('user_id', None)
+    session.pop('nick_name', None)
+    session.pop('mobile', None)
+    session.pop('is_admin', None)
+
+    # 返回结果
+    return redirect(url_for('index.index'))
 
 @passport_blue.route('/login',methods=['POST'])
 @user_login_data

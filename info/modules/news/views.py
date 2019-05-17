@@ -1,4 +1,4 @@
-from flask import render_template, current_app, jsonify,g
+from flask import render_template, current_app, jsonify, g, abort
 from flask import request,session
 
 from info import db
@@ -128,6 +128,8 @@ def news_detail(news_id):
     click_news = News.query.order_by(News.clicks.desc()).limit(6)
 
     news = News.query.get(news_id)
+    if not news:
+        abort(404)
     is_collected = False
     if user:
         if news in g.user.collection_news:

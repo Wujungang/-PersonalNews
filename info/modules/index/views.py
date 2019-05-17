@@ -23,9 +23,9 @@ def newslist():
         current_app.logger.error(e)
         return jsonify(errno=500,errmsg='数据格式错误')
     if cid == 1:
-        news = News.query.order_by(News.create_time.desc()).paginate(page, per_page, False)
+        news = News.query.filter(News.status == 0).order_by(News.create_time.desc()).paginate(page, per_page, False)
     else:
-        news = News.query.filter(News.category_id==cid).order_by(News.create_time.desc()).paginate(page, per_page, False)
+        news = News.query.filter(News.category_id==cid,News.status == 0).order_by(News.create_time.desc()).paginate(page, per_page, False)
     items = news.items
     total_pages = news.pages
     cur_page = news.page
@@ -42,7 +42,10 @@ def newslist():
 
 @index_blue.route('/logout')
 def logout():
-    session.pop('user_id')
+    session.pop('user_id', None)
+    # session.pop('nick_name', None)
+    # session.pop('mobile', None)
+    # session.pop('is_admin', None)
     return jsonify(errno=200,errmsg='退出成功')
 
 
