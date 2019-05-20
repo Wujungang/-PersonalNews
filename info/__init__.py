@@ -2,7 +2,6 @@ from flask_sqlalchemy import SQLAlchemy
 import redis
 from flask_wtf.csrf import CSRFProtect, generate_csrf
 from flask_session import Session
-
 from flask import Flask, render_template
 from config import config
 import logging
@@ -10,7 +9,7 @@ from logging.handlers import RotatingFileHandler
 
 #创建一个SQLAlchemy对象
 db = SQLAlchemy()
-redis_store = redis.StrictRedis(host='127.0.0.1', port=6379,decode_responses=True)
+redis_store = redis.StrictRedis(host='127.0.0.1', port=6379,decode_responses=True)#decode_response将数据转成str
 def setup_log(config_name):
     """配置日志"""
     # 设置日志的记录等级

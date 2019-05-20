@@ -62,42 +62,22 @@ function updateNewsData() {
         'page':cur_page,
         'cid':currentCid,
 
-    }
-    // $.ajax({
-    //     url:'/newslist?page='+cur_page+'&cid='+currentCid,
-    //     type:'get',
-    //     // data:JSON.stringify(params),
-    //     success:function (response) {
-    //         if (response.errno=200) {
-    //             // 先清空原有数据
-    //             $(".list_con").html('');
-    //             // 显示数据
-    //             for (var i = 0; i < response.data.news.length; i++) {
-    //                 var news = response.data.news[i];
-    //                 var content = '<li>';
-    //                 content += '<a href="#" class="news_pic fl"><img src="' + news.index_image_url + '?imageView2/1/w/170/h/170"></a>';
-    //                 content += '<a href="#" class="news_title fl">' + news.title + '</a>';
-    //                 content += '<a href="#" class="news_detail fl">' + news.digest + '</a>';
-    //                 content += '<div class="author_info fl">';
-    //                 content += '<div class="source fl">来源：' + news.source + '</div>';
-    //                 content += '<div class="time fl">' + news.create_time + '</div>';
-    //                 content += '</div>'
-    //                 content += '</li>'
-    //                 $(".list_con").append(content)
-    //             }
-    //         }
-    //     }
-    // })
-    $.get('/newslist',params,function (response) {
-          data_querying = false;
-          if (response.errno=200) {
+    };
+    $.ajax({
+        // url:'/newslist?page='+cur_page+'&cid='+currentCid,
+        url:'/newslist',
+        type:'get',
+        // data:JSON.stringify(params),
+        data:params,
+        success:function (response) {
+            data_querying = false;
+            if (response.errno=200) {
                 total_page = response.data.total_pages;
-                // 先清空原有数据
-              if (cur_page == 1){
+                  if (cur_page == 1){
                   $(".list_con").html('');
-              }
+                }
                 // 显示数据
-                for (var i = 0; i < response.data.news.length; i++) {
+               for (var i = 0; i < response.data.news.length; i++) {
                     var news = response.data.news[i];
                     var content = '<li>';
                     // content += '<a href="/news/detail/"'+news.id+ '"class="news_pic fl"><img src="' + news.index_image_url + '?imageView2/1/w/170/h/170"></a>';
@@ -112,5 +92,31 @@ function updateNewsData() {
                     $(".list_con").append(content)
                 }
             }
+        }
     })
+    // $.get('/newslist',params,function (response) {
+    //       data_querying = false;
+    //       if (response.errno=200) {
+    //             total_page = response.data.total_pages;
+    //             // 先清空原有数据
+    //           if (cur_page == 1){
+    //               $(".list_con").html('');
+    //           }
+    //             // 显示数据
+    //             for (var i = 0; i < response.data.news.length; i++) {
+    //                 var news = response.data.news[i];
+    //                 var content = '<li>';
+    //                 // content += '<a href="/news/detail/"'+news.id+ '"class="news_pic fl"><img src="' + news.index_image_url + '?imageView2/1/w/170/h/170"></a>';
+    //                 content += '<a href="/news/detail/'+news.id+'" class="news_pic fl"><img src="' + news.index_image_url + '?imageView2/1/w/170/h/170"></a>'
+    //                 content += '<a href="/news/detail/'+news.id+'" class="news_title fl">' + news.title + '</a>';
+    //                 content += '<a href="/news/detail/'+news.id+'" class="news_detail fl">' + news.digest + '</a>';
+    //                 content += '<div class="author_info fl">';
+    //                 content += '<div class="source fl">来源：' + news.source + '</div>';
+    //                 content += '<div class="time fl">' + news.create_time + '</div>';
+    //                 content += '</div>';
+    //                 content += '</li>';
+    //                 $(".list_con").append(content)
+    //             }
+    //         }
+    // })
 }
