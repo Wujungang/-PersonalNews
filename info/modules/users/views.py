@@ -7,6 +7,34 @@ from flask import g, redirect, url_for, render_template, request, jsonify, curre
 from info import db
 
 
+#个人关注
+@user_blue.route('/user_follow',methods=['GET','POST'])
+@user_login_data
+def user_follow():
+    user = g.user
+    p = request.args.get('p',1)
+
+    paginates = user.followed.paginate(p,4,False)
+    items = paginates.items
+    pages = paginates.pages
+    page = paginates.page
+
+    user_list = []
+    for i in items:
+        user_list.append(i.to_dict())
+
+    context = {
+        'wjg123':user_list if user_list else None,
+        'pages':pages,
+        'page':page
+    }
+    return render_template('news/user_follow.html',context=context)
+
+
+
+
+
+
 @user_blue.route('/news_list')
 @user_login_data
 def news_list():
