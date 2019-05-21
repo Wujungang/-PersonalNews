@@ -58,7 +58,7 @@ def create_app(config_name):
     def after_request(response):
         csrf_token = generate_csrf()
         response.set_cookie("csrf_token",csrf_token)
-        response.set_cookie('wjg','123')
+        # response.set_cookie('wjg','123')
         return response
 
     #注册自定义过滤器

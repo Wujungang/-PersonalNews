@@ -15,7 +15,7 @@
         <ul class="card_list_con">
            {% for user in context.wjg123 %}
              <li class="author_card card_list">
-                <a href="#" target="_blank" class="author_pic"><img src="{% if user.avatar_url %}
+                <a href="/user/other_info?id={{ user.id }}" target="_blank" class="author_pic"><img src="{% if user.avatar_url %}
                     {{ user.avatar_url }}
                     {% else %}
                     ../../static/news/images/user_pic.png
@@ -28,10 +28,7 @@
                 <a href="javascript:;" class="focused fr" data-userid="{{ user.id }}"><span class="out">已关注</span><span class="over">取消关注</span></a>
                  <input type="hidden" data-userid="{{ user.id }}" >
             </li>
-
            {% endfor %}
-
-
         </ul>
         
         

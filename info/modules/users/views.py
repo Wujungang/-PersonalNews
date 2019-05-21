@@ -1,10 +1,112 @@
 from info.utils.image_storage import storage
-
 from info.models import User, Category, News
 from . import user_blue
 from info.utils.common import user_login_data
-from flask import g, redirect, url_for, render_template, request, jsonify, current_app, session
+from flask import g, redirect, url_for, render_template, request, jsonify, current_app, session, abort
 from info import db
+
+
+@user_blue.route('/other_news_list')
+@user_login_data
+def other_news_list():
+    user = g.user
+    if not user:
+        abort(404)
+    p = request.args.get('p','1')
+    p = int(p)
+    user_id = request.args.get('user_id')
+    user = User.query.get(user_id)
+    paginate = News.query.filter(News.user_id == user.id).paginate(p, 1, False)
+    # 获取当前页数据
+    news_list = paginate.items
+    pages = paginate.pages
+    page = paginate.page
+    news_dict_list = []
+    for i in news_list:
+        news_dict_list.append(i.to_review_dict())
+    data = {
+        'news_list':news_dict_list,
+        'total_page':pages,
+        'current_page':page
+    }
+    return jsonify(errno=200, data=data)
+    # 1.获取页数
+    # page = request.args.get("p", '1')
+    # other_id = request.args.get("user_id")
+    #
+    # # 2.校验参数
+    # try:
+    #     p = int(page)
+    # except Exception as e:
+    #     current_app.logger.error(e)
+    #     return jsonify(errno=500, errmsg='参数错误')
+    #
+    # if not all([page, other_id]):
+    #     return jsonify(errno=500, errmsg='缺少参数')
+    #
+    # # 3.查询用户数据
+    # try:
+    #     user = User.query.get(other_id)
+    # except Exception as e:
+    #     current_app.logger.error(e)
+    #     return jsonify(errno=5000, errmsg='查询用户数据失败')
+    # if not user:
+    #     return jsonify(errno=500, errmsg='用户不存在')
+    #
+    # # 4.分页查询
+    # try:
+    #     paginate = News.query.filter(News.user_id == user.id).paginate(p, 4, False)
+    #     # 获取当前页数据
+    #     news_list = paginate.items
+    #     # 获取当前页
+    #     current_page = paginate.page
+    #     # 获取总页数
+    #     total_page = paginate.pages
+    # except Exception as e:
+    #     current_app.logger.error(e)
+    #     return jsonify(errno=500, errmsg='查询用户数据失败')
+    #
+    # # 5.构造响应数据
+    # news_dict_list = []
+    # for news_item in news_list:
+    #     news_dict_list.append(news_item.to_review_dict())
+    #
+    # data = {
+    #     "news_list": news_dict_list,
+    #     "total_page": total_page,
+    #     "current_page": current_page
+    # }
+    #
+    # # 6.渲染界面
+    # return jsonify(errno=200, errmsg='OK', data=data)
+
+
+
+
+#其他用户的信息
+@user_blue.route('/other_info')
+@user_login_data
+def other_info():
+    user = g.user
+    user_id = request.args.get('id')
+
+    other = User.query.get(user_id)
+    # paginate = News.query.filter(News.user_id == user.id).paginate(p, 1, False)
+    if not other:
+        abort(404)
+
+    is_followed = False
+    if user and other:
+        if other in user.followed:
+            is_followed = True
+    context = {
+        'user':user.to_dict() if user else None,
+        'other':other.to_dict(),
+        'is_followed':is_followed
+    }
+    return render_template('news/other.html',context=context)
+
+
 
 
 #个人关注
@@ -13,8 +115,8 @@ from info import db
 def user_follow():
     user = g.user
     p = request.args.get('p',1)
-
-    paginates = user.followed.paginate(p,4,False)
+    p = int(p)
+    paginates = user.followed.paginate(p,1,False)
     items = paginates.items
     pages = paginates.pages
     page = paginates.page
@@ -24,7 +126,7 @@ def user_follow():
         user_list.append(i.to_dict())
 
     context = {
-        'wjg123':user_list if user_list else None,
+        'wjg123':user_list if user_list else [],
         'pages':pages,
         'page':page
     }
