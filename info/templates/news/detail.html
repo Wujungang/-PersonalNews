@@ -64,7 +64,7 @@
                     <img src="{% if data.user.avatar_url %}
                     {{ data.user.avatar_url }}
                     {% else %}
-                    {{ data.user.avatar_url }}
+                    ../../static/news/images/user_pic.png
                     {% endif %}" alt="用户图标">
                 </div>
                 <textarea placeholder="请发表您的评论" class="comment_input"></textarea>
@@ -123,11 +123,10 @@
         <div class="rank_con fr">
             {% if data.news.author %}
                 <div class="author_card">
-                <a href="#" class="author_pic"><img src="{% if data.news.author %}
+                <a href="#" class="author_pic"><img src="{% if data.news.author.avatar_url %}
                 {{ data.news.author.avatar_url }}
-
                 {% else %}
-                ../../static/news/images/person01.png
+                ../../static/news/images/user_pic.png
                 {% endif %}" alt="author_pic"></a>
                 <a href="#" class="author_name">{{ data.news.author.nick_name }}</a>
                 <div class="author_resume">{{ data.news.author.signature }}</div>

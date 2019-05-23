@@ -1,1 +1,1 @@
-{"http:rzlA6rsApDvJlsozrcHpVoHkWNmFmgG5qKeJ6weB:image": {"upHosts": ["http://up.qiniu.com", "http://upload.qiniu.com", "-H up.qiniu.com http://183.131.7.3"], "deadline": 1558415791, "ioHosts": ["http://iovip.qbox.me"]}}
+{"http:rzlA6rsApDvJlsozrcHpVoHkWNmFmgG5qKeJ6weB:image": {"ioHosts": ["http://iovip.qbox.me"], "upHosts": ["http://up.qiniu.com", "http://upload.qiniu.com", "-H up.qiniu.com http://183.131.7.3"], "deadline": 1558668906}}

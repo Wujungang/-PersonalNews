@@ -3,9 +3,14 @@ import redis
 from flask_wtf.csrf import CSRFProtect, generate_csrf
 from flask_session import Session
 from flask import Flask, render_template
+import os
+
 from config import config
 import logging
 from logging.handlers import RotatingFileHandler
+from flask_ckeditor import CKEditor
+
+ckeditor = CKEditor()
 
 #创建一个SQLAlchemy对象
 db = SQLAlchemy()
@@ -27,6 +32,18 @@ def create_app(config_name):
     #配置项目日志
     setup_log(config_name)
     app = Flask(__name__)
+    # 设置富文本编辑器的高度
+    app.config['CKEDITOR_HEIGHT'] = 400
+    app.config['CKEDITOR_SERVE_LOCAL'] = True
+    #富文本编辑器向后端发送请求时的路由，默认没有蓝图，需要加上蓝图
+    app.config['CKEDITOR_FILE_UPLOADER'] = 'user.upload'
+    #获取当前文件的路径，方便下面拼接上传文件存放路径
+    basedir = os.path.abspath(os.path.dirname(__file__))
+    #拼接上传文件存放的路径
+    app.config['UPLOADED_PATH'] = os.path.join(basedir, 'uploads')
+    #富文本编辑器
+    ckeditor.init_app(app)
+
     # 关联flask对象与Config对象
     app.config.from_object(config[config_name])
     # 手动为SQLAlchemy对象执行init_app方法并传入app
@@ -34,7 +51,7 @@ def create_app(config_name):
     # global redis_store
     # redis_store = redis.StrictRedis(host=config[config_name].REDIS_HOST, port=config[config_name].REDIS_PORT,decode_responses=True)
     # 开启csrf保护
-    CSRFProtect(app)
+    # CSRFProtect(app)
     # 将Sessiom扩展与flask对象关联
     Session(app)
 
@@ -58,7 +75,7 @@ def create_app(config_name):
     def after_request(response):
         csrf_token = generate_csrf()
         response.set_cookie("csrf_token",csrf_token)
-        # response.set_cookie('wjg','123')
+        response.set_cookie("calis", 'calis')
         return response
 
     #注册自定义过滤器

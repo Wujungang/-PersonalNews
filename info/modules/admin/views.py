@@ -1,6 +1,6 @@
 import datetime
 import time
-from flask import render_template, request, jsonify, g, session, current_app, abort
+from flask import render_template, request, jsonify, g, session, current_app, abort, redirect, url_for
 
 from info import db
 from info.models import User, News,Category
@@ -305,6 +305,9 @@ def admin_index():
     user = g.user
     if not user:
         return render_template('admin/login.html')
+    if user.is_admin != True:
+        return render_template('admin/login.html')
+
     data = {
         'user':user.to_dict()
     }
@@ -319,9 +322,12 @@ def admin_login():
     else:
         username = request.form.get('username')
         password = request.form.get('password')
+        user =  User.query.filter(User.mobile==username,User.is_admin == True).first()
+        if not user:
+            return redirect(url_for('index.index'))
         if not all([username,password]):
             return render_template('admin/login.html', errmsg='cuowu')
-        user = User.query.filter(User.nick_name==username).first()
+        user = User.query.filter(User.mobile==username).first()
         if not user:
             return render_template('admin/login.html', errmsg='cuowu')
         if not user.check_password(password):
@@ -330,7 +336,6 @@ def admin_login():
         session['user_id'] = user.id
         session['is_admin'] = True
         session['mobile'] = user.mobile
-
         data = {
             'user':user.to_dict()
         }

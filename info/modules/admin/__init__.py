@@ -8,5 +8,5 @@ def before_request():
     if not request.url.endswith(url_for('admin.admin_login')):
         user_id = session.get('user_id')
         is_admin = session.get('is_admin',False)
-        if not user_id and not is_admin:
+        if not is_admin:
             return redirect('/')

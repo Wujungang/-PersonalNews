@@ -1,10 +1,14 @@
+import datetime
+import os
+import random
+
 from info.utils.image_storage import storage
 from info.models import User, Category, News
 from . import user_blue
 from info.utils.common import user_login_data
-from flask import g, redirect, url_for, render_template, request, jsonify, current_app, session, abort
+from flask import g, redirect, url_for, render_template, request, jsonify, current_app, session, abort, send_from_directory
 from info import db
-
+from flask_ckeditor import CKEditor, CKEditorField, upload_fail, upload_success
 
 @user_blue.route('/other_news_list')
 @user_login_data
@@ -156,6 +160,29 @@ def news_list():
 
 
 
+@user_blue.route('/files/<filename>')
+def uploaded_files(filename):
+    path = current_app.config['UPLOADED_PATH']
+    return send_from_directory(path, filename)
+
+
+def gen_rnd_filename():
+    filename_endfix = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
+    return '%s%s' % (filename_endfix, str(random.randrange(1000, 10000)))
+
+@user_blue.route('/upload', methods=['POST'])
+def upload():
+    f = request.files.get('upload')
+    extension = f.filename.split('.')[1].lower()
+    # if extension not in ['jpg', 'gif', 'png', 'jpeg']:
+    #     return upload_fail(message='Image only!')
+    start_prefix = gen_rnd_filename()
+    f.save(os.path.join(current_app.config['UPLOADED_PATH'], start_prefix + f.filename  ))
+    url = url_for('user.uploaded_files', filename= start_prefix + f.filename)
+    print(url)
+    return upload_success(url=url)
+
+
 @user_blue.route('/news_release',methods=['GET','POST'])
 @user_login_data
 def news_release():
@@ -169,26 +196,26 @@ def news_release():
         return render_template('news/user_news_release.html',category_list = category_list)
 
     if request.method == 'POST':
-        title = request.form.get('title')
-        category_id = request.form.get('category_id')
-        digest = request.form.get('digest')
+        title = request.json.get('title')
+        category_id = request.json.get('category_id')
+        digest = request.json.get('digest')
         source = "个人发布"
-        index_image = request.files.get('index_image').read()
-        content = request.form.get('content')
-        if not all([title,category_id,digest,index_image,content]):
-            return jsonify(errno=505,errmsg='缺少参数')
+        # index_image = request.json.get('index_image').read()
+        content = request.json.get('ckeditor')
+        # if not all([title,category_id,digest,index_image,content]):
+        #     return jsonify(errno=505,errmsg='缺少参数')
         #保存图片
-        try:
-            ret = storage(index_image)
-        except Exception as e:
-            current_app.logger.error(e)
-            return jsonify(errno=505,errmsg='新闻发布失败')
+        # try:
+        #     ret = storage(index_image)
+        # except Exception as e:
+        #     current_app.logger.error(e)
+        #     return jsonify(errno=505,errmsg='新闻发布失败')
 
         news = News()
         news.title = title
         news.category_id = category_id
         news.digest = digest
-        news.index_image_url = 'http://prhl60xbx.bkt.clouddn.com/' + ret
+        # news.index_image_url = 'http://prhl60xbx.bkt.clouddn.com/' + ret
         news.content = content
         news.user_id = user.id
         news.status = 1

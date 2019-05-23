@@ -5,7 +5,7 @@ import logging
 class Config(object):
 
     #配置秘钥
-    SECRET_KEY = 'ZXC'
+    SECRET_KEY = 'ZXC123'
     #开启调试模式
     DEBUG = True
     # 数据库的配置信息

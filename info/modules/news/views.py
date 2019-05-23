@@ -211,7 +211,7 @@ def news_detail(news_id):
 
     data = {
         'user':user.to_dict() if user else None,
-        'news':news.to_dict(),
+        'news':news.to_dict() if news else None,
         'click_news':click_news,
         'is_collected':is_collected,
         'comments':comment_list,
